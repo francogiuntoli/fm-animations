@@ -1,14 +1,14 @@
 "use client"
 
-import { ClassAttributes, HTMLAttributes, SVGProps, useState } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 
 export default function Steps() {
   let [step, setStep] = useState(1)
 
   return (
-    <div className="flex items-start">
-      <div className="mx-auto w-full max-w-md rounded-2xl bg-slate-700">
+    <div className="flex items-start py-4">
+      <div className="mx-auto w-full max-w-md rounded-2xl bg-white">
         <div className="flex justify-between rounded p-8">
           <Step step={1} currentStep={step} />
           <Step step={2} currentStep={step} />
@@ -17,11 +17,11 @@ export default function Steps() {
         </div>
         <div className="px-8 pb-8">
           <div>
-            <div className="mt-2 h-6 w-40 rounded bg-slate-100" />
+            <div className="mt-2 h-6 w-40 rounded bg-slate-300" />
             <div className="mt-4 space-y-2">
-              <div className="h-4 w-5/6 rounded bg-slate-100" />
-              <div className="h-4 rounded bg-slate-100" />
-              <div className="h-4 w-4/6 rounded bg-slate-100" />
+              <div className="h-4 w-5/6 rounded bg-slate-300" />
+              <div className="h-4 rounded bg-slate-300" />
+              <div className="h-4 w-4/6 rounded bg-slate-300" />
             </div>
           </div>
 
@@ -38,10 +38,12 @@ export default function Steps() {
             <button
               onClick={() => setStep(step > 4 ? step : step + 1)}
               className={`${
-                step > 4 ? "pointer-events-none opacity-50" : ""
-              } bg flex items-center justify-center rounded-full bg-blue-500 px-3.5 py-1.5 font-medium tracking-tight text-white hover:bg-blue-600 active:bg-blue-700`}
+                step > 3
+                  ? "bg-green-500 hover:bg-green-600 active:bg-green-700"
+                  : "bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
+              } bg flex select-none items-center justify-center rounded-full px-3.5 py-1.5 font-medium tracking-tight text-white`}
             >
-              {step > 4 ? "Submit" : "Continue"}
+              {step > 3 ? "Finish" : "Continue"}
             </button>
           </div>
         </div>
@@ -84,7 +86,8 @@ function Step({ step, currentStep }: StepProps) {
           type: "tween",
           ease: "circOut",
         }}
-        className="absolute inset-0 rounded-full bg-blue-200"
+        className={`absolute inset-0 rounded-full 
+        ${status === "complete" ? "bg-green-200" : "bg-blue-200"}`}
       ></motion.div>
 
       <motion.div
@@ -106,12 +109,12 @@ function Step({ step, currentStep }: StepProps) {
             color: "var(--blue-500)",
           },
         }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.3 }}
         className={`relative flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold`}
       >
         <div className="flex items-center justify-center">
           {status === "complete" ? (
-            <CheckIcon className="h-6 w-6 text-white" />
+            <CheckIcon className="h-6 w-6 text-black" />
           ) : (
             <span>{step}</span>
           )}
@@ -141,7 +144,7 @@ function CheckIcon(className: CheckIconProps) {
           delay: 0.2,
           type: "tween",
           ease: "easeOut",
-          duration: 0.3,
+          duration: 0.4,
         }}
         strokeLinecap="round"
         strokeLinejoin="round"
