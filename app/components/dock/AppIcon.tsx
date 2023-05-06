@@ -7,17 +7,25 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { IconType } from "react-icons"
 
 interface AppIconProps {
   icon: IconType
   mouseX: MotionValue
+  color: string
+  title: string
 }
 
-export default function AppIcon({ icon: Icon, mouseX }: AppIconProps) {
+export default function AppIcon({
+  icon: Icon,
+  mouseX,
+  color,
+  title,
+}: AppIconProps) {
   let ref = useRef<HTMLDivElement>(null)
   const [iconSize, setIconSize] = useState(40)
+  const [show, setShow] = useState(false)
 
   let distance = useTransform(mouseX, (val) => {
     let bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 }
@@ -35,11 +43,37 @@ export default function AppIcon({ icon: Icon, mouseX }: AppIconProps) {
 
   return (
     <motion.div
+      className="flex flex-col items-center justify-center"
+      onHoverStart={() => setShow(true)}
+      onHoverEnd={() => setShow(false)}
       ref={ref}
       style={{ width }}
-      className="flex aspect-square w-10 items-center justify-center rounded-2xl bg-gray-400"
     >
-      <Icon size={iconSize - 6} color="white" />
+      {show && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.25,
+              ease: "easeInOut",
+            }}
+            className="pointer-events-none relative select-none pb-0 text-center text-white/[85%]"
+          >
+            <motion.div className=" mb-2 flex items-center justify-center rounded-md border border-slate-900 border-opacity-60 bg-black/[25%] px-3">
+              {title}
+            </motion.div>
+          </motion.div>
+        </>
+      )}
+      <motion.div
+        ref={ref}
+        style={{ width }}
+        className={`flex aspect-square w-10 items-center justify-center rounded-lg ${color}`}
+      >
+        <Icon size={iconSize - 6} color="white" />
+      </motion.div>
     </motion.div>
   )
 }
