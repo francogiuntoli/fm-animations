@@ -1,8 +1,12 @@
-import Dock from "./components/Dock"
+import Container from "./components/Container"
+import Toggle from "./components/toggle/Toggle"
+import Dock from "./components/dock/Dock"
 
 export default function Home() {
   return (
-    <div className="my-[45vh] flex h-full flex-row items-center justify-center bg-red-500 py-2 ">
+    <div className="flex h-[100vh] flex-col justify-between py-1">
+      <Toggle />
+
       <Dock />
     </div>
   )
