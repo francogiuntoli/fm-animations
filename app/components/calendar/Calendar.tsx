@@ -18,7 +18,6 @@ import {
   startOfToday,
 } from "date-fns"
 import { Fragment, useState } from "react"
-import { DateRange, Range, RangeKeyDict } from "react-date-range"
 
 const meetings = [
   {
