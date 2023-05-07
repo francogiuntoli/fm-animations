@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/dock/Dock.jsx", "app/components/dock/AppIcon.jsx", "app/components/calendar/Calendar.jsx", "app/components/toggle/ToggleBuild.jsx", "app/components/toggle/Toggle.jsx", "app/components/steps/Steps.jsx", "app/components/calendar/Calendar2.jsx", "app/components/resizable_panel/ResizablePanel.jsx"],
   "exclude": ["node_modules"]
 }

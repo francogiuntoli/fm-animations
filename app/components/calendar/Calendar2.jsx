@@ -12,18 +12,14 @@ import {
   startOfMonth,
   startOfWeek,
   subMonths,
-  add,
   getDay,
   isEqual,
-  isSameDay,
   isToday,
-  parseISO,
   startOfToday,
 } from "date-fns"
-import { AnimatePresence, motion, MotionConfig } from "framer-motion"
+import { AnimatePresence, MotionConfig, motion } from "framer-motion"
 import { useState } from "react"
 import useMeasure from "react-use-measure"
-import { useRouter } from "next/navigation"
 
 export default function Calendar2() {
   let today = startOfToday()
@@ -31,7 +27,6 @@ export default function Calendar2() {
   let [monthString, setMonthString] = useState(format(new Date(), "yyyy-MM"))
   let [direction, setDirection] = useState()
   let [isAnimating, setIsAnimating] = useState(false)
-  const router = useRouter()
 
   let month = parse(monthString, "yyyy-MM", new Date())
 
@@ -60,7 +55,7 @@ export default function Calendar2() {
     end: endOfWeek(endOfMonth(month)),
   })
 
-  function classNames(...classes: any) {
+  function classNames(...classes) {
     return classes.filter(Boolean).join(" ")
   }
   return (
@@ -201,24 +196,16 @@ export default function Calendar2() {
   )
 }
 
-// let transition = { type: "tween", ease: "easeOut", duration: 0.25 };
 let transition = { type: "spring", bounce: 0, duration: 0.3 }
 let variants = {
   enter: (direction) => {
-    // console.log({ direction });
     return { x: `${100 * direction}%`, opacity: 0 }
-    // return { x: "100%" };
   },
   middle: { x: "0%", opacity: 1 },
-  // exit: { x: "-100%" },
+
   exit: (direction) => {
-    // return { x: "-100%" };
     return { x: `${-100 * direction}%`, opacity: 0 }
   },
-  // exit: (direction) => {
-  //   console.log({ direction });
-  //   return { x: `${-100 * direction}%` };
-  // },
 }
 
 let removeImmediately = {
