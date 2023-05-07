@@ -1,5 +1,6 @@
 "use client"
 import {
+  AnimatePresence,
   MotionValue,
   motion,
   useMotionValue,
@@ -49,15 +50,15 @@ export default function AppIcon({
       ref={ref}
       style={{ width }}
     >
-      {show && (
-        <>
+      <AnimatePresence>
+        {show && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{
-              duration: 0.25,
-              ease: "easeInOut",
+              duration: 0.12,
+              ease: "easeIn",
             }}
             className="pointer-events-none relative select-none pb-0 text-center text-white/[85%]"
           >
@@ -65,8 +66,8 @@ export default function AppIcon({
               {title}
             </motion.div>
           </motion.div>
-        </>
-      )}
+        )}
+      </AnimatePresence>
       <motion.div
         ref={ref}
         style={{ width }}
