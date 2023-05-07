@@ -151,7 +151,16 @@ export default function Calendar2() {
                         >
                           <button
                             type="button"
-                            onClick={() => setSelectedDay(day)}
+                            onClick={() => {
+                              return (
+                                isSameMonth(day, month)
+                                  ? setSelectedDay(day)
+                                  : setSelectedDay(day),
+                                Number(format(day, "d")) <= 7
+                                  ? nextMonth()
+                                  : previousMonth()
+                              )
+                            }}
                             className={classNames(
                               isEqual(day, selectedDay) && "text-white",
                               !isEqual(day, selectedDay) &&
@@ -164,7 +173,7 @@ export default function Calendar2() {
                               !isEqual(day, selectedDay) &&
                                 !isToday(day) &&
                                 !isSameMonth(day, month) &&
-                                "text-gray-400",
+                                "text-gray-200",
                               isEqual(day, selectedDay) &&
                                 isToday(day) &&
                                 "bg-red-500",
