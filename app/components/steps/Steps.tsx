@@ -7,7 +7,7 @@ export default function Steps() {
   let [step, setStep] = useState(1)
 
   return (
-    <div className="flex items-start py-4">
+    <div className="mx-auto flex w-full max-w-lg items-start rounded-xl border border-stone-200 py-4">
       <div className="mx-auto w-full max-w-md rounded-2xl bg-white">
         <div className="flex justify-between rounded p-8">
           <Step step={1} currentStep={step} />
@@ -87,7 +87,7 @@ function Step({ step, currentStep }: StepProps) {
           ease: "circOut",
         }}
         className={`absolute inset-0 rounded-full 
-        ${status === "complete" ? "bg-green-200" : "bg-blue-200"}`}
+        ${status === "complete" ? "bg-green-200" : "bg-blue-50"}`}
       ></motion.div>
 
       <motion.div
@@ -114,7 +114,7 @@ function Step({ step, currentStep }: StepProps) {
       >
         <div className="flex items-center justify-center">
           {status === "complete" ? (
-            <CheckIcon className="h-6 w-6 text-black" />
+            <CheckIcon className="h-6 w-6 text-gray-600" />
           ) : (
             <span>{step}</span>
           )}

@@ -23,6 +23,7 @@ import {
 import { AnimatePresence, motion, MotionConfig } from "framer-motion"
 import { useState } from "react"
 import useMeasure from "react-use-measure"
+import { useRouter } from "next/navigation"
 
 export default function Calendar2() {
   let today = startOfToday()
@@ -30,6 +31,7 @@ export default function Calendar2() {
   let [monthString, setMonthString] = useState(format(new Date(), "yyyy-MM"))
   let [direction, setDirection] = useState()
   let [isAnimating, setIsAnimating] = useState(false)
+  const router = useRouter()
 
   let month = parse(monthString, "yyyy-MM", new Date())
 
@@ -80,7 +82,7 @@ export default function Calendar2() {
                     animate="middle"
                     exit="exit"
                   >
-                    <header className="relative flex justify-between px-8">
+                    <header className="relative flex justify-between px-20">
                       <motion.button
                         variants={removeImmediately}
                         className="z-10 rounded-full p-1.5 hover:bg-stone-100"
@@ -91,7 +93,7 @@ export default function Calendar2() {
                       <motion.p
                         variants={variants}
                         custom={direction}
-                        className="absolute inset-0 flex items-center justify-center font-semibold"
+                        className="relative inset-0 flex items-center justify-center font-semibold"
                       >
                         {format(month, "MMMM yyyy")}
                       </motion.p>
@@ -111,20 +113,18 @@ export default function Calendar2() {
                         variants={removeImmediately}
                       />
                     </header>
-
                     <motion.div
                       variants={removeImmediately}
                       className="mt-6 grid grid-cols-7 gap-y-6 px-8 text-sm"
                     >
-                      <span className="font-medium text-stone-500">Su</span>
-                      <span className="font-medium text-stone-500">Mo</span>
-                      <span className="font-medium text-stone-500">Tu</span>
-                      <span className="font-medium text-stone-500">We</span>
-                      <span className="font-medium text-stone-500">Th</span>
-                      <span className="font-medium text-stone-500">Fr</span>
-                      <span className="font-medium text-stone-500">Sa</span>
+                      <span className="font-medium text-stone-600">Su</span>
+                      <span className="font-medium text-stone-600">Mo</span>
+                      <span className="font-medium text-stone-600">Tu</span>
+                      <span className="font-medium text-stone-600">We</span>
+                      <span className="font-medium text-stone-600">Th</span>
+                      <span className="font-medium text-stone-600">Fr</span>
+                      <span className="font-medium text-stone-600">Sa</span>
                     </motion.div>
-
                     <motion.div
                       variants={variants}
                       custom={direction}
