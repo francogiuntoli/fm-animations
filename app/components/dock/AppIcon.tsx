@@ -3,7 +3,6 @@ import {
   AnimatePresence,
   MotionValue,
   motion,
-  useMotionValue,
   useMotionValueEvent,
   useSpring,
   useTransform,
