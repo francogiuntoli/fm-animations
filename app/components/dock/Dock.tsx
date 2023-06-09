@@ -10,10 +10,10 @@ export default function Dock() {
   let mouseX = useMotionValue(Infinity)
 
   const categories = [
-    { icon: AiOutlineHome, color: "bg-red-500", title: "Home" },
-    { icon: SiMonkeytie, color: "bg-green-500", title: "About" },
-    { icon: ImUserTie, color: "bg-blue-500", title: "Jobs" },
-    { icon: AiOutlineMail, color: "bg-pink-500", title: "Contact" },
+    { icon: AiOutlineHome, color: "bg-black/80", title: "Home" },
+    { icon: SiMonkeytie, color: "bg-black/80", title: "About" },
+    { icon: ImUserTie, color: "bg-black/80", title: "Jobs" },
+    { icon: AiOutlineMail, color: "bg-black/80", title: "Contact" },
   ]
 
   return (

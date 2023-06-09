@@ -7,7 +7,7 @@ export default function Steps() {
   let [step, setStep] = useState(1)
 
   return (
-    <div className="mx-auto flex w-full max-w-lg items-start rounded-xl border border-stone-200 py-4">
+    <div className="mx-auto flex w-full max-w-lg items-start rounded-xl py-4">
       <div className="mx-auto w-full max-w-md rounded-2xl bg-white">
         <div className="flex justify-between rounded p-8">
           <Step step={1} currentStep={step} />
