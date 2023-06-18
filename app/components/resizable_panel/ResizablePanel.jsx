@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, MotionConfig } from "framer-motion"
 import { useState } from "react"
-import { CheckIcon } from "@heroicons/react/24/solid"
+import { HiCheck } from "react-icons/hi2"
 import { createContext } from "react"
 import { useContext } from "react"
 import useMeasure from "react-use-measure"
@@ -123,9 +123,8 @@ Form.Button = function FormButton({ children, className, ...rest }) {
       <button
         type="submit"
         disabled={disabled}
-        className={`${className} relative transition duration-200 ${
-          disabled ? "bg-opacity-80" : "hover:bg-opacity-80"
-        }`}
+        className={`${className} relative transition duration-200 ${disabled ? "bg-opacity-80" : "hover:bg-opacity-80"
+          }`}
         {...rest}
       >
         <AnimatePresence mode="wait">
@@ -148,7 +147,7 @@ Form.Button = function FormButton({ children, className, ...rest }) {
               animate={{ opacity: 1 }}
               className="absolute inset-0 flex justify-center py-2"
             >
-              <CheckIcon className="h-full" />
+              <HiCheck className="h-full" />
             </motion.div>
           )}
         </AnimatePresence>

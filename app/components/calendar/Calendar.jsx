@@ -1,281 +1,224 @@
 "use client"
 
-import { Menu, Transition } from "@headlessui/react"
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline"
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi2"
 import {
-  add,
+  addMonths,
   eachDayOfInterval,
   endOfMonth,
+  endOfWeek,
   format,
+  isSameMonth,
+  parse,
+  startOfMonth,
+  startOfWeek,
+  subMonths,
   getDay,
   isEqual,
-  isSameDay,
-  isSameMonth,
   isToday,
-  parse,
-  parseISO,
   startOfToday,
 } from "date-fns"
-import { Fragment, useState } from "react"
-
-const meetings = [
-  {
-    id: 1,
-    name: "Leslie Alexander",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    startDatetime: "2023-05-11T13:00",
-    endDatetime: "2023-05-11T14:30",
-  },
-  {
-    id: 2,
-    name: "Michael Foster",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    startDatetime: "2023-05-20T09:00",
-    endDatetime: "2023-05-20T11:30",
-  },
-  {
-    id: 3,
-    name: "Dries Vincent",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    startDatetime: "2023-05-20T17:00",
-    endDatetime: "2023-05-20T18:30",
-  },
-  {
-    id: 4,
-    name: "Leslie Alexander",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    startDatetime: "2023-06-09T13:00",
-    endDatetime: "2023-06-09T14:30",
-  },
-  {
-    id: 5,
-    name: "Michael Foster",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    startDatetime: "2023-05-13T14:00",
-    endDatetime: "2023-05-13T14:30",
-  },
-]
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ")
-}
+import { AnimatePresence, MotionConfig, motion } from "framer-motion"
+import { useState } from "react"
+import useMeasure from "react-use-measure"
 
 export default function Calendar() {
   let today = startOfToday()
   let [selectedDay, setSelectedDay] = useState(today)
-  let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"))
-  let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date())
+  let [monthString, setMonthString] = useState(format(new Date(), "yyyy-MM"))
+  let [direction, setDirection] = useState()
+  let [isAnimating, setIsAnimating] = useState(false)
 
-  let days = eachDayOfInterval({
-    start: firstDayCurrentMonth,
-    end: endOfMonth(firstDayCurrentMonth),
-  })
-
-  function previousMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
-    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"))
-  }
+  let month = parse(monthString, "yyyy-MM", new Date())
 
   function nextMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
-    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"))
+    if (isAnimating) return
+
+    let next = addMonths(month, 1)
+
+    setMonthString(format(next, "yyyy-MM"))
+    setDirection(1)
+    setIsAnimating(true)
   }
 
-  let selectedDayMeetings = meetings.filter((meeting) =>
-    isSameDay(parseISO(meeting.startDatetime), selectedDay)
-  )
+  function previousMonth() {
+    if (isAnimating) return
 
+    let previous = subMonths(month, 1)
+
+    setMonthString(format(previous, "yyyy-MM"))
+    setDirection(-1)
+    setIsAnimating(true)
+  }
+
+  let days = eachDayOfInterval({
+    start: startOfWeek(startOfMonth(month)),
+    end: endOfWeek(endOfMonth(month)),
+  })
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ")
+  }
   return (
-    <div className="pt-16">
-      <div className="mx-auto max-w-md px-4 sm:px-7 md:max-w-4xl md:px-6">
-        <div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
-          <div className="md:pr-14">
-            <div className="flex items-center">
-              <h2 className="flex-auto font-semibold text-gray-900">
-                {format(firstDayCurrentMonth, "MMMM yyyy")}
-              </h2>
-              <button
-                type="button"
-                onClick={previousMonth}
-                className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-              >
-                <span className="sr-only">Previous month</span>
-                <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <button
-                onClick={nextMonth}
-                type="button"
-                className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-              >
-                <span className="sr-only">Next month</span>
-                <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="mt-10 grid grid-cols-7 text-center text-xs leading-6 text-gray-500">
-              <div>S</div>
-              <div>M</div>
-              <div>T</div>
-              <div>W</div>
-              <div>T</div>
-              <div>F</div>
-              <div>S</div>
-            </div>
-            <div className="mt-2 grid grid-cols-7 text-sm">
-              {days.map((day, dayIdx) => (
-                <div
-                  key={day.toString()}
-                  className={classNames(
-                    dayIdx === 0 && colStartClasses[getDay(day)],
-                    "py-1.5"
-                  )}
+    <MotionConfig transition={transition}>
+      <div className="flex items-start p-4 text-stone-900">
+        <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-2xl bg-white">
+          <div className="rounded-2xl border border-stone-200 py-8">
+            <div className="flex flex-col justify-center  text-center">
+              <ResizablePanel>
+                <AnimatePresence
+                  mode="popLayout"
+                  initial={false}
+                  custom={direction}
+                  onExitComplete={() => setIsAnimating(false)}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDay(day)}
-                    className={classNames(
-                      isEqual(day, selectedDay) && "text-white",
-                      !isEqual(day, selectedDay) &&
-                        isToday(day) &&
-                        "text-red-500",
-                      !isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        isSameMonth(day, firstDayCurrentMonth) &&
-                        "text-gray-900",
-                      !isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        !isSameMonth(day, firstDayCurrentMonth) &&
-                        "text-gray-400",
-                      isEqual(day, selectedDay) && isToday(day) && "bg-red-500",
-                      isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        "bg-gray-900",
-                      !isEqual(day, selectedDay) && "hover:bg-gray-200",
-                      (isEqual(day, selectedDay) || isToday(day)) &&
-                        "font-semibold",
-                      "mx-auto flex h-8 w-8 items-center justify-center rounded-full"
-                    )}
+                  <motion.div
+                    key={monthString}
+                    initial="enter"
+                    animate="middle"
+                    exit="exit"
                   >
-                    <time dateTime={format(day, "yyyy-MM-dd")}>
-                      {format(day, "d")}
-                    </time>
-                  </button>
+                    <header className="relative flex justify-between px-20">
+                      <motion.button
+                        variants={removeImmediately}
+                        className="z-10 rounded-full p-1.5 hover:bg-stone-100"
+                        onClick={previousMonth}
+                      >
+                        <HiOutlineChevronLeft className="h-4 w-4" />
+                      </motion.button>
+                      <motion.p
+                        variants={variants}
+                        custom={direction}
+                        className="relative inset-0 flex items-center justify-center font-semibold"
+                      >
+                        {format(month, "MMMM yyyy")}
+                      </motion.p>
+                      <motion.button
+                        variants={removeImmediately}
+                        className="z-10 rounded-full p-1.5 hover:bg-stone-100"
+                        onClick={nextMonth}
+                      >
+                        <HiOutlineChevronRight className="h-4 w-4" />
+                      </motion.button>
+                      <motion.div
+                        className="absolute inset-0"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(to right, white 15%, transparent 30%, transparent 70%, white 85%)",
+                        }}
+                        variants={removeImmediately}
+                      />
+                    </header>
+                    <motion.div
+                      variants={removeImmediately}
+                      className="mt-6 grid grid-cols-7 gap-y-6 px-8 text-sm"
+                    >
+                      <span className="font-medium text-stone-600">Su</span>
+                      <span className="font-medium text-stone-600">Mo</span>
+                      <span className="font-medium text-stone-600">Tu</span>
+                      <span className="font-medium text-stone-600">We</span>
+                      <span className="font-medium text-stone-600">Th</span>
+                      <span className="font-medium text-stone-600">Fr</span>
+                      <span className="font-medium text-stone-600">Sa</span>
+                    </motion.div>
+                    <motion.div
+                      variants={variants}
+                      custom={direction}
+                      className="mt-6 grid grid-cols-7 gap-y-6 px-8 text-sm"
+                    >
+                      {/* {days.map((day) => (
+                        <span
+                          className={`${
+                            isSameMonth(day, month) ? "" : "text-stone-300"
+                          } font-semibold`}
+                          key={format(day, "yyyy-MM-dd")}
+                        >
+                          {format(day, "d")}
+                        </span>
+                      ))} */}
 
-                  <div className="mx-auto mt-1 h-1 w-1">
-                    {meetings.some((meeting) =>
-                      isSameDay(parseISO(meeting.startDatetime), day)
-                    ) && (
-                      <div className="h-1 w-1 rounded-full bg-sky-500"></div>
-                    )}
-                  </div>
-                </div>
-              ))}
+                      {days.map((day, dayIdx) => (
+                        <div
+                          key={day.toString()}
+                          className={classNames(
+                            dayIdx === 0 && colStartClasses[getDay(day)],
+                            "py-1.5"
+                          )}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => {
+                              return isSameMonth(day, month)
+                                ? setSelectedDay(day)
+                                : Number(format(day, "d")) <= 7
+                                  ? (nextMonth(), setSelectedDay(day))
+                                  : (previousMonth(), setSelectedDay(day))
+                            }}
+                            className={classNames(
+                              isEqual(day, selectedDay) && "text-white",
+                              !isEqual(day, selectedDay) &&
+                              isToday(day) &&
+                              "text-red-500",
+                              !isEqual(day, selectedDay) &&
+                              !isToday(day) &&
+                              isSameMonth(day, month) &&
+                              "text-gray-900",
+                              !isEqual(day, selectedDay) &&
+                              !isToday(day) &&
+                              !isSameMonth(day, month) &&
+                              "text-gray-300",
+                              isEqual(day, selectedDay) &&
+                              isToday(day) &&
+                              "bg-red-500",
+                              isEqual(day, selectedDay) &&
+                              !isToday(day) &&
+                              "bg-gray-900",
+                              !isEqual(day, selectedDay) && "hover:bg-gray-200",
+                              (isEqual(day, selectedDay) || isToday(day)) &&
+                              "font-semibold",
+                              "mx-auto flex h-8 w-8 items-center justify-center rounded-full"
+                            )}
+                          >
+                            <time dateTime={format(day, "yyyy-MM-dd")}>
+                              {format(day, "d")}
+                            </time>
+                          </button>
+                        </div>
+                      ))}
+                    </motion.div>
+                  </motion.div>
+                </AnimatePresence>
+              </ResizablePanel>
             </div>
           </div>
-          <section className="mt-12 md:mt-0 md:pl-14">
-            <h2 className="font-semibold text-gray-900">
-              Schedule for{" "}
-              <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
-                {format(selectedDay, "MMM dd, yyy")}
-              </time>
-            </h2>
-            <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-              {selectedDayMeetings.length > 0 ? (
-                selectedDayMeetings.map((meeting) => (
-                  <Meeting meeting={meeting} key={meeting.id} />
-                ))
-              ) : (
-                <p>No meetings for today.</p>
-              )}
-            </ol>
-          </section>
         </div>
       </div>
-    </div>
+    </MotionConfig>
   )
 }
 
-function Meeting({ meeting }: any) {
-  let startDateTime = parseISO(meeting.startDatetime)
-  let endDateTime = parseISO(meeting.endDatetime)
+let transition = { type: "spring", bounce: 0, duration: 0.3 }
+let variants = {
+  enter: (direction) => {
+    return { x: `${100 * direction}%`, opacity: 0 }
+  },
+  middle: { x: "0%", opacity: 1 },
+
+  exit: (direction) => {
+    return { x: `${-100 * direction}%`, opacity: 0 }
+  },
+}
+
+let removeImmediately = {
+  exit: { visibility: "hidden" },
+}
+
+function ResizablePanel({ children }) {
+  let [ref, bounds] = useMeasure()
 
   return (
-    <li className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100">
-      <img
-        src={meeting.imageUrl}
-        alt=""
-        className="h-10 w-10 flex-none rounded-full"
-      />
-      <div className="flex-auto">
-        <p className="text-gray-900">{meeting.name}</p>
-        <p className="mt-0.5">
-          <time dateTime={meeting.startDatetime}>
-            {format(startDateTime, "h:mm a")}
-          </time>{" "}
-          -{" "}
-          <time dateTime={meeting.endDatetime}>
-            {format(endDateTime, "h:mm a")}
-          </time>
-        </p>
-      </div>
-      <Menu
-        as="div"
-        className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100"
-      >
-        <div>
-          <Menu.Button className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
-            <span className="sr-only">Open options</span>
-            <EllipsisVerticalIcon className="h-6 w-6" aria-hidden="true" />
-          </Menu.Button>
-        </div>
-
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className="py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
-                    )}
-                  >
-                    Edit
-                  </a>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
-                    )}
-                  >
-                    Cancel
-                  </a>
-                )}
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
-    </li>
+    <motion.div animate={{ height: bounds.height > 0 ? bounds.height : null }}>
+      <div ref={ref}>{children}</div>
+    </motion.div>
   )
 }
 

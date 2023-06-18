@@ -8,7 +8,7 @@ import {
 } from "framer-motion"
 import { useEffect, useState } from "react"
 import useMeasure from "react-use-measure"
-import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/20/solid"
+import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2"
 
 export default function Slider() {
   let initialHeight = 4
@@ -29,11 +29,9 @@ export default function Slider() {
 
   return (
     <MotionConfig transition={transition}>
-      <div className="flex h-full max-h-[800px] items-center justify-center py-16">
-        <div className="flex h-full w-[375px] flex-col justify-center rounded-2xl bg-gray-800 px-4">
-          <p className="mt-8 text-center text-sm font-medium">
-            iOS 16 Slider demo
-          </p>
+      <div className="flex h-full max-h-[200px] items-center justify-center py-16">
+        <div className="flex h-full w-[375px] flex-col justify-center rounded-2xl bg-gray-400 px-4">
+          <p className="mt-8 text-center text-sm font-medium">iOS 16 Slider</p>
           <div className="flex flex-1 flex-col items-center justify-center">
             <div className="flex w-full items-center justify-center">
               <motion.div
@@ -46,7 +44,7 @@ export default function Slider() {
                 }}
                 className="flex w-6 shrink-0 justify-start"
               >
-                <SpeakerXMarkIcon className="h-4 w-4" />
+                <HiSpeakerXMark className="h-4 w-4" />
               </motion.div>
               {/* Slider */}
               <motion.div
@@ -96,7 +94,7 @@ export default function Slider() {
                 }}
                 className="flex w-6 shrink-0 justify-end"
               >
-                <SpeakerWaveIcon className="h-4 w-4" />
+                <HiSpeakerWave className="h-4 w-4" />
               </motion.div>
             </div>
             {/* Label */}

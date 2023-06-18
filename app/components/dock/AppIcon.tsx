@@ -59,11 +59,11 @@ export default function AppIcon({
               duration: 0.12,
               ease: "easeIn",
             }}
-            className="pointer-events-none relative select-none pb-0 text-center text-white/[85%]"
+            className="pointer-events-none select-none pb-0 text-center text-white/[85%]"
           >
-            <motion.div className=" mb-2 flex items-center justify-center rounded-md border border-slate-900 border-opacity-60 bg-black/[25%] px-3">
+            <div className="mb-2 flex items-center justify-center rounded-md border border-slate-900 border-opacity-60 bg-black/[25%] px-3">
               {title}
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
