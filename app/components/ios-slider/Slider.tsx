@@ -30,7 +30,7 @@ export default function Slider() {
   return (
     <MotionConfig transition={transition}>
       <div className="flex h-full max-h-[200px] items-center justify-center py-16">
-        <div className="flex h-full w-[375px] flex-col justify-center rounded-2xl bg-gray-400 px-4">
+        <div className="flex h-full w-[375px] flex-col justify-center rounded-2xl bg-gray-400/50 px-4">
           <p className="mt-8 text-center text-sm font-medium">iOS 16 Slider</p>
           <div className="flex flex-1 flex-col items-center justify-center">
             <div className="flex w-full items-center justify-center">
